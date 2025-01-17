@@ -1,0 +1,22 @@
+#layout-main{
+    width: 100vw;
+    height: 100vh;
+}
+
+#layout-nav{
+    width: 100vw;
+    height: 10vh;
+    background-color: antiquewhite;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#layout-board{
+    width: 100vw;
+    height: 90vh;
+    background-color: #ffffff;
+    border-radius: 10px;
+}
