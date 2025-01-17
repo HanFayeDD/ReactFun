@@ -47,7 +47,7 @@ const chartConfig = {
 const chartConfig1 = {
   desktop: {
     label: "成交量",
-    color: "#ec4899",
+    color: "purple",
   },
 };
 
@@ -77,16 +77,16 @@ export default function BOARD() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(null);
-  const q = "000009";
+  const [q, setQ] = useState("000001");
   const api_url = "http://127.0.0.1:8000/finance/stock/" + q;
   const fetchData = () => {
+    console.log("fetch data for ", q);
     setLoading(true);
     setError(false);
     axios
       .get(api_url)
       .then((response) => {
         setData(response.data.data);
-        // console.log("获取到的数据", response.data.data);
       })
       .catch((error) => {
         setError(error);
@@ -100,67 +100,64 @@ export default function BOARD() {
   }, []); // 空数组作为依赖项，确保只在组件挂载时执行一次
   //   console.log("函数体中数据", data);
   const [chartdata, chartdata1] = shapedata(data);
-  console.log("处理之后的数据", chartdata1);
+//   console.log("处理之后的数据", chartdata1);
   const chart = (
-    <div style={{ width: "40vw" }}>
-      <Card>
-        <CardHeader>
-          <CardTitle>开盘与收盘</CardTitle>
-          <CardDescription>最近时间{q}股票代码开盘收盘价格</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig}>
-            <AreaChart
-              accessibilityLayer
-              data={chartdata}
-              margin={{
-                left: 12,
-                right: 12,
-              }}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="day"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 8)}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dot" />}
-              />
-              <Area
-                dataKey="open"
-                type="natural"
-                fill="var(--color-mobile)"
-                fillOpacity={0.4}
-                stroke="var(--color-mobile)"
-                stackId="a"
-              />
-              <Area
-                dataKey="close"
-                type="natural"
-                fill="var(--color-desktop)"
-                fillOpacity={0.4}
-                stroke="var(--color-desktop)"
-                stackId="a"
-              />
-            </AreaChart>
-          </ChartContainer>
-        </CardContent>
-        <CardFooter>
-          <div className="flex w-full items-start gap-2 text-sm">
-            <div className="grid gap-2">
-              <div className="flex items-center gap-2 font-medium leading-none">
-                {q}股票详情
-                <TrendingUp className="h-4 w-4" />
-              </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>开盘与收盘</CardTitle>
+        <CardDescription>最近时间{q}股票代码开盘收盘价格</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <AreaChart
+            accessibilityLayer
+            data={chartdata}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={0}
+              // tickFormatter={(value) => value.slice(0, 8)}
+            />
+            <ChartTooltip
+              cursor={true}
+              content={<ChartTooltipContent indicator="dot" />}
+            />
+            <Area
+              dataKey="open"
+              type="natural"
+              fill="var(--color-mobile)"
+              fillOpacity={0.4}
+              stroke="var(--color-mobile)"
+              stackId="a"
+            />
+            <Area
+              dataKey="close"
+              type="natural"
+              fill="var(--color-desktop)"
+              fillOpacity={0.4}
+              stroke="var(--color-desktop)"
+              stackId="a"
+            />
+          </AreaChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter>
+        <div className="flex w-full items-start gap-2 text-sm">
+          <div className="grid gap-2">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              {q}股票详情 <TrendingUp className="h-4 w-4" />
             </div>
           </div>
-        </CardFooter>
-      </Card>
-    </div>
+        </div>
+      </CardFooter>
+    </Card>
   );
   const chart1 = (
     <Card>
@@ -178,23 +175,23 @@ export default function BOARD() {
               right: 12,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} horizontal={true}/>
             <XAxis
               dataKey="day"
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickMargin={0}
+              //   tickFormatter={(value) => value.slice(0, 8)}
             />
             <ChartTooltip
-              cursor={false}
+              cursor={true}
               content={<ChartTooltipContent hideLabel />}
             />
             <Line
               dataKey="number"
               type="natural"
               stroke="var(--color-desktop)"
-              strokeWidth={2}
+              strokeWidth={2.5}
               dot={false}
             />
           </LineChart>
@@ -214,10 +211,6 @@ export default function BOARD() {
   );
   return (
     <div style={{ padding: "3vh", fontSize: "20px" }} id="layout-board">
-      {/* <Button style={{ width: "100px", height: "50px" }} onClick={fetchData}>
-        换一换
-      </Button> */}
-      {loading && <p>loading data</p>}
       {error && <p>Error {error.message}</p>}
       <div
         style={{
@@ -227,19 +220,53 @@ export default function BOARD() {
           borderRadius: "10px",
         }}
       >
-    <div style={{display:"flex", flexDirection:"row", justifyContent:"space-around"}}>
-    <InputOTP maxLength={6}>
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-          </InputOTPGroup>
-        </InputOTP>
-    </div>
+        <div
+          style={{
+            display: "flex",
+            // margin:"0 auto"
+            flexDirection:"row",
+            justifyContent: "space-around",
+            // marginTop: "-7vh",
+            // width:"100vw",
+            // height:"10vh"
+          }}
+        >
+    
+          <InputOTP
+            maxLength={6}
+            value={q}
+            onChange={(value) => {
+              if(value.length <6){
+                console.log("otp未6位");
+                return
+              }
+              setQ(value);
+            //   fetchData();
+            }}
+            // style={{}}
+          >
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP>
+          <Button style={{width:"7vw", height:"5vh"}} 
+            onClick={
+                () => {
+                    fetchData();
+                }
+            }
+          >submit
+          </Button>
+        
+        </div>
+    
       </div>
+
       <div style={{ height: "60vh" }}>
         <div
           style={{
@@ -247,9 +274,11 @@ export default function BOARD() {
             flexDirection: "row",
             justifyContent: "space-around",
             marginTop: "10vh",
+            alignItems: "center",
           }}
         >
-          {data && !loading && chart}
+          {loading && <p style={{}}>loading data</p>}
+          <div style={{ width: "40vw" }}>{data && !loading && chart} </div>
           <div style={{ width: "40vw" }}>{data && !loading && chart1}</div>
         </div>
       </div>
