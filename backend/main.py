@@ -23,21 +23,14 @@ begindays: str = (datetime.now() - timedelta(days=sepdays)
 
 @app.get("/finance/stock/{q}")
 async def get_tock_info(q:str | None = '000001'):
-    # res = ak.stock_zh_a_hist(symbol=q, period="daily",
-    #                                     start_date=begindays,
-    #                                     end_date=endays, adjust="qfq")
+    res = ak.stock_zh_a_hist(symbol=q, period="daily",
+                                        start_date=begindays,
+                                        end_date=endays, adjust="qfq")
     d = dict()
-    d['日期'] = []##res['日期'].tolist()
-    d['开盘'] = []##res['开盘'].tolist()
-    d['收盘'] = []##res['收盘'].tolist()
-    d['成交量'] = []##res['成交量'].tolist()
-    length = 100
-    for ele in d.keys():
-        if ele == '日期':
-            d[ele] = list(range(1, length+1, 1))
-            continue
-        d[ele] = [random.randint(1, 1000) for _ in range(length)]
-    time.sleep(5)
+    d['日期'] = res['日期'].tolist()
+    d['开盘'] = res['开盘'].tolist()
+    d['收盘'] = res['收盘'].tolist()
+    d['成交量'] = res['成交量'].tolist()
     return {"stockcode":q, "data":d}
 
 @app.get("/random/list/{length}")

@@ -2,6 +2,7 @@
 import axios from "axios";
 import "./css/mainlayout.css";
 import { use, useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TrendingUp } from "lucide-react";
 import {
@@ -100,7 +101,7 @@ export default function BOARD() {
   }, []); // 空数组作为依赖项，确保只在组件挂载时执行一次
   //   console.log("函数体中数据", data);
   const [chartdata, chartdata1] = shapedata(data);
-//   console.log("处理之后的数据", chartdata1);
+  //   console.log("处理之后的数据", chartdata1);
   const chart = (
     <Card>
       <CardHeader>
@@ -175,7 +176,7 @@ export default function BOARD() {
               right: 12,
             }}
           >
-            <CartesianGrid vertical={false} horizontal={true}/>
+            <CartesianGrid vertical={false} horizontal={true} />
             <XAxis
               dataKey="day"
               tickLine={false}
@@ -185,7 +186,7 @@ export default function BOARD() {
             />
             <ChartTooltip
               cursor={true}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent dot />}
             />
             <Line
               dataKey="number"
@@ -209,6 +210,22 @@ export default function BOARD() {
       </CardFooter>
     </Card>
   );
+  const submitbutton = (
+    <Button
+    style={{ width: "7vw", height: "5vh", marginTop: "2vh" }}
+    onClick={() => {
+      fetchData();
+    }}
+  >
+    submit
+  </Button>
+  )
+  const disabledbutton = (
+    <Button disabled style={{width: "7vw", height: "5vh", marginTop: "2vh" }}>
+    <Loader2 className="animate-spin" />
+    Please wait
+  </Button>
+  )
   return (
     <div style={{ padding: "3vh", fontSize: "20px" }} id="layout-board">
       {error && <p>Error {error.message}</p>}
@@ -222,26 +239,23 @@ export default function BOARD() {
       >
         <div
           style={{
-            display: "flex",
-            // margin:"0 auto"
-            flexDirection:"row",
-            justifyContent: "space-around",
-            // marginTop: "-7vh",
-            // width:"100vw",
-            // height:"10vh"
+            display: "flex", // 使用Flexbox布局
+            flexDirection: "column",
+            justifyContent: "center", // 水平居中对齐 justify是主轴方向(row)
+            alignItems: "center", // 垂直居中对齐 align是交叉轴方向(column)
+            height: "10vh", // 设置一个高度以便垂直居中生效
           }}
         >
-    
           <InputOTP
             maxLength={6}
             value={q}
             onChange={(value) => {
-              if(value.length <6){
+              if (value.length < 6) {
                 console.log("otp未6位");
-                return
+                return;
               }
               setQ(value);
-            //   fetchData();
+              //   fetchData();
             }}
             // style={{}}
           >
@@ -254,17 +268,8 @@ export default function BOARD() {
               <InputOTPSlot index={5} />
             </InputOTPGroup>
           </InputOTP>
-          <Button style={{width:"7vw", height:"5vh"}} 
-            onClick={
-                () => {
-                    fetchData();
-                }
-            }
-          >submit
-          </Button>
-        
+          {loading ? disabledbutton : submitbutton}
         </div>
-    
       </div>
 
       <div style={{ height: "60vh" }}>
@@ -277,7 +282,6 @@ export default function BOARD() {
             alignItems: "center",
           }}
         >
-          {loading && <p style={{}}>loading data</p>}
           <div style={{ width: "40vw" }}>{data && !loading && chart} </div>
           <div style={{ width: "40vw" }}>{data && !loading && chart1}</div>
         </div>
