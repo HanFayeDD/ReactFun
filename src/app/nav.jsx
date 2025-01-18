@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 export default function NAV({ nav2pagefunc, navname }) {
-  const [pagenum, setPagenum] = useState(1);
+  const [pagenum, setPagenum] = useState(2);
   return (
     <div id="layout-nav">
       <Button

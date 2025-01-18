@@ -33,9 +33,12 @@ async def get_tock_info(q:str | None = '000001'):
     d['成交量'] = res['成交量'].tolist()
     return {"stockcode":q, "data":d}
 
-@app.get("/random/list/{length}")
-def get_random_list(length:int):
-    return [random.randint(0,100) for _ in range(length)]
+@app.get("/random/list/{number}/{length}")
+def get_random_list(number:int, length:int):
+    res = dict()
+    for i in range(number):
+        res[i+1] = [random.randint(1, 100) for _ in range(length)]
+    return res
 
 @app.get("/hello")
 def get_hello():
