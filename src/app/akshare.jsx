@@ -2,6 +2,7 @@
 import Flex from "./flex";
 import "./css/akshare.css";
 import { TrendingUp } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -90,7 +91,17 @@ function InputCode({ q, setQ, setData }) {
         </InputOTPGroup>
       </InputOTP>
 
-      <Button onClick={fetchData}>查询</Button>
+      {loading ? (
+        <Button disabled style={{ width: "35%", height: "10%" }}>
+          <Loader2 className="animate-spin" />
+          Please wait
+        </Button>
+      ) : (
+        <Button onClick={fetchData} style={{ width: "35%", height: "10%" }}>
+          {/* //???onClick怎样写究竟 */}
+          查询
+        </Button>
+      )}
     </div>
   );
 }
@@ -98,12 +109,12 @@ function InputCode({ q, setQ, setData }) {
 // 第一行展示数据部分
 function Datashow({ q, data, which }) {
   const chartConfig = {
-    c1:"lightpink",
-    c2:"lightblue",
-    c3:"purple",
-    c4:"lightgreen",
-    chart1_1_w_h:{height:"97%", width:"97%"},
-    chart1_2_w_h:{height:"97%", width:"97%"},
+    c1: "lightpink",
+    c2: "lightblue",
+    c3: "purple",
+    c4: "lightgreen",
+    chart1_1_w_h: { height: "97%", width: "97%" },
+    chart1_2_w_h: { height: "97%", width: "97%" },
   };
   const chart1_1 = (
     <Card style={chartConfig.chart1_1_w_h}>
@@ -113,7 +124,7 @@ function Datashow({ q, data, which }) {
         <p>开盘-收盘-最高-最低</p>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}  style={{}}>
+        <ChartContainer config={chartConfig} style={{}}>
           <LineChart
             accessibilityLayer
             data={data}
@@ -162,7 +173,6 @@ function Datashow({ q, data, which }) {
           </LineChart>
         </ChartContainer>
       </CardContent>
-  
     </Card>
   );
   const chart1_2 = (
@@ -222,7 +232,6 @@ function Datashow({ q, data, which }) {
           </LineChart>
         </ChartContainer>
       </CardContent>
-  
     </Card>
   );
   return (
@@ -232,9 +241,8 @@ function Datashow({ q, data, which }) {
         width: "35vw",
       }}
     >
-      {which == "1-1" && (<div id="chart1-1">{chart1_1}</div>)}
-      {which == "1-2" && (<div id="chart1-2">{chart1_2}</div>)}
-
+      {which == "1-1" && <div id="chart1-1">{chart1_1}</div>}
+      {which == "1-2" && <div id="chart1-2">{chart1_2}</div>}
     </div>
   );
 }
@@ -249,7 +257,10 @@ export default function Akshare() {
       <Datashow q={q} data={data["chart1-2"]} which={"1-2"} />
     </div>
   );
-  const downboard = <div id="akshare-single-line"> </div>;
+  const downboard = (<div id="akshare-single-line">
+    <Datashow/>
+    <Datashow/>
+  </div>);
   return (
     <div
       style={{

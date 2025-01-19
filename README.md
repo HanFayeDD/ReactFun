@@ -5,3 +5,4 @@
 - 对于按钮，采用`laoding`state在submit和loaing按钮中二选一进行渲染。`{loading ? disabledbutton : submitbutton}`
 ![alt text](assets/image.png)
 ![alt text](assets/image-1.png)
+
