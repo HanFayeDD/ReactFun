@@ -8,7 +8,7 @@ import Akshare from './akshare';
 
 import './css/mainlayout.css';
 const navname = ["数据看板", "flex"]
-const initPage = 3
+const initPage = 2
 export default function Home(){
   const [pnfromchild, setPnFromChild] = useState(initPage)
   const handlemasfromNAV = (message) => {

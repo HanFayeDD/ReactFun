@@ -62,9 +62,9 @@ async def get_info(q: str | None = "000001"):
     danwei = getdanwei(df_product.iloc[0, -1])
     colors = ["#"+hex(random.randint(1, 1e10))[2:].zfill(6)[-6:]
               for _ in range(df_product.shape[0])]
-    df_product['colors'] = colors
+    df_product['fill'] = colors
     df_product.reset_index(drop=True, inplace=True)
-    df_product['营业收入'] = df_product['营业收入'].apply(lambda x:x[:-len(danwei)])
+    df_product['营业收入'] = df_product['营业收入'].apply(lambda x: float(x[:-len(danwei)]))##!!注意数值类型的转换
     res_product = change_df(df_product)
     ## 获取按地区分
     df_area = df.loc[(df['分类方向'] == "按地区分") & (
@@ -72,9 +72,9 @@ async def get_info(q: str | None = "000001"):
     danwei_area = getdanwei(df_area.iloc[0, -1])
     colors = ["#"+hex(random.randint(1, 1e10))[2:].zfill(6)[-6:]
               for _ in range(df_area.shape[0])]
-    df_area['colors'] = colors
+    df_area['fill'] = colors
     df_area.reset_index(drop=True, inplace=True)
-    df_area['营业收入'] = df_area["营业收入"].apply(lambda x:x[:-len(danwei_area)])
+    df_area['营业收入'] = df_area["营业收入"].apply(lambda x:float(x[:-len(danwei_area)]))
     res_area = change_df(df_area)
 
     time.sleep(1)
@@ -82,18 +82,8 @@ async def get_info(q: str | None = "000001"):
         "stockcode": q,
         "chart1-1": ans["开盘-收盘-最高-最低"],
         "chart1-2": ans["振幅-涨跌幅-涨跌额-换手率"],
-        "chart2-1": {
-            "data": res_product,
-            "category": "按产品分",
-            "time": time_,
-            "danwei": danwei
-        },
-        "chart2-2": {
-            "data": res_area,
-            "category": "按地区分",
-            "time": time_,
-            "danwei": danwei_area
-        }
+        "chart2-1": res_product,
+        "chart2-2": res_area
     }
 
 

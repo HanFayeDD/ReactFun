@@ -12,7 +12,7 @@
     border-color: rgb(0, 0, 0);
 }
 
-#up-items {
+#items {
     /* background-color: bisque; */
     border-style: solid;
     border-radius: 10px;
@@ -21,7 +21,7 @@
     height: 45vh;
 }
 
-#chart1-1, #chart1-2 {
+#chart1-1, #chart1-2, #chart2-1, #chart2-2 {
     width:100%;
     height:100%;
     display:flex;
