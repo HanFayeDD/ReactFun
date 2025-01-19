@@ -6,7 +6,7 @@
 #layout-nav{
     width: 100vw;
     height: 10vh;
-    background-color: antiquewhite;
+    background-color: rgb(255, 145, 0);
     border-radius: 10px;
     display: flex;
     flex-direction: row;

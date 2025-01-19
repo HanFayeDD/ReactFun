@@ -2,8 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-export default function NAV({ nav2pagefunc, navname }) {
-  const [pagenum, setPagenum] = useState(2);
+
+export default function NAV({ nav2pagefunc, navname, initPage }) {
+  const [pagenum, setPagenum] = useState(initPage);
   return (
     <div id="layout-nav">
       <Button

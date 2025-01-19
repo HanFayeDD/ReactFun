@@ -27,11 +27,11 @@ import {
 } from "@/components/ui/chart";
 
 const number = 12;
-const length = 30;
+const length = 50;
 const api_url = "http://127.0.0.1:8000/random/list/" + number + "/" + length;
 const chartConfig1 = {
   edge: "lightblue",
-  fill: "lightpink",
+  fill: "lightyellow",
 };
 
 const chartConfig2 = {
@@ -79,7 +79,7 @@ function Chart({ data, idx }) {
               dataKey="val"
               type="natural"
               fill={chartConfig1.fill}
-              fillOpacity={0.4}
+              fillOpacity={0.8}
               stroke={chartConfig1.edge}
               stackId="a"
             />
@@ -144,7 +144,7 @@ function Chart({ data, idx }) {
       </CardFooter>
     </Card>
   );
-  return <div style={{width:"30vw"}}>{idx % 4 != 1 ? pic1 : pic2}</div>;
+  return <div style={{width:"30vw"}}>{idx % 2 != 1 ? pic1 : pic2}</div>;
 }
 
 export default function Flex() {
@@ -171,17 +171,18 @@ export default function Flex() {
       <Button style={{width:"10vw"}} onClick={fetchData}>click me</Button>
 
       {chartsData.length == 0 ? (
-        <p style={{fontSize:"40vh"}}>No data</p>
+        <p style={{fontSize:"30vh"}}>No data</p>
       ) : (
         <div style={{
             display:"flex",
             flexDirection:"row",
-            width:"100vw",
+            width:"98vw",
             // height:"100px",
             justifyContent:"space-around",
             alignItems:"center",
             alignContent:"space-around",
-            flexWrap:"wrap"
+            flexWrap:"wrap",
+            overflowX:"nonescroll"
         }}>
             <Chart data={chartsData[1]} idx={1} />
             <Chart data={chartsData[2]} idx={2} />
@@ -195,6 +196,7 @@ export default function Flex() {
             <Chart data={chartsData[10]} idx={10} />
             <Chart data={chartsData[11]} idx={11} />
             <Chart data={chartsData[12]} idx={12} />
+
 
 
         </div>

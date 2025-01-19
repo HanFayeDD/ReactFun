@@ -1,0 +1,32 @@
+#akshare-single-line {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 97vw;
+    height: 49vh;
+    /* background-color: rgb(211, 161, 161); */
+    border-radius: 10px;
+    border-style: dotted;
+    border-width: 3px;
+    border-color: bisque;
+}
+
+#up-items {
+    /* background-color: bisque; */
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 3px;
+    border-color: lightcoral;
+    height: 45vh;
+}
+
+#chart1-1, #chart1-2 {
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-around;
+    align-items:center;
+    /* background-color: black; */
+}
