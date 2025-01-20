@@ -17,6 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+clist = ['#f43f5e', '#ec4899', '#8b5cf6', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#365314']
 sepdays = 90
 endays: str = datetime.now().strftime('%Y%m%d')
 begindays: str = (datetime.now() - timedelta(days=sepdays)
@@ -25,65 +26,90 @@ begindays: str = (datetime.now() - timedelta(days=sepdays)
 
 @app.get("/finance/info/{q}")
 async def get_info(q: str | None = "000001"):
+    flag1 = True
+    flag2 = True
     ans = dict({
         "开盘-收盘-最高-最低": [],
         "振幅-涨跌幅-涨跌额-换手率": []
     })
-    # res1 = ak.stock_zh_a_hist(symbol=q, period="daily",
-    #                           start_date=begindays,
-    #                           end_date=endays, adjust="qfq")
-    # res1.to_csv(f"{q}.csv")
-    res1 = pd.read_csv(f"{q}.csv")
+    try:
+        res1 = ak.stock_zh_a_hist(symbol=q, period="daily",
+                                start_date=begindays,
+                                end_date=endays, adjust="qfq")
+    except:
+        flag1 = False
     length = res1.shape[0]
-    days = res1['日期'].tolist()
-    for i in range(length):
-        ans["开盘-收盘-最高-最低"].append({"日期": days[i],
-                                   "开盘": res1.loc[i, "开盘"],
-                                   "收盘": res1.loc[i, "收盘"],
-                                   "最高": res1.loc[i, "最高"],
-                                   "最低": res1.loc[i, "最低"]})
-    for i in range(length):
-        ans["振幅-涨跌幅-涨跌额-换手率"].append({"日期": days[i],
-                                      "振幅": res1.loc[i, "振幅"],
-                                      "涨跌幅": res1.loc[i, "涨跌幅"],
-                                      "涨跌额": res1.loc[i, "涨跌额"],
-                                      "换手率": res1.loc[i, "换手率"]})
-    
-    df_origin = pd.read_csv(f"industry_{q}.csv")
-    time_ls = df_origin['报告期'].unique()
-    time_ = None
-    for ele in time_ls:
-        if ele.endswith("年度"):
-            time_ = ele
-    df = df_origin.loc[df_origin['报告期'] == time_]
-    # 获取按产品分
-    df_product = df.loc[(df['分类方向'] == "按产品分") & (
-        df['分类'] != '合计')].loc[:, ['分类', '营业收入']]
-    danwei = getdanwei(df_product.iloc[0, -1])
-    colors = ["#"+hex(random.randint(1, 1e10))[2:].zfill(6)[-6:]
-              for _ in range(df_product.shape[0])]
-    df_product['fill'] = colors
-    df_product.reset_index(drop=True, inplace=True)
-    df_product['营业收入'] = df_product['营业收入'].apply(lambda x: float(x[:-len(danwei)]))##!!注意数值类型的转换
-    res_product = change_df(df_product)
-    ## 获取按地区分
-    df_area = df.loc[(df['分类方向'] == "按地区分") & (
-        df['分类'] != '合计')].loc[:, ['分类', '营业收入']]
-    danwei_area = getdanwei(df_area.iloc[0, -1])
-    colors = ["#"+hex(random.randint(1, 1e10))[2:].zfill(6)[-6:]
-              for _ in range(df_area.shape[0])]
-    df_area['fill'] = colors
-    df_area.reset_index(drop=True, inplace=True)
-    df_area['营业收入'] = df_area["营业收入"].apply(lambda x:float(x[:-len(danwei_area)]))
-    res_area = change_df(df_area)
+    if flag1 and length != 0:    
+        days = res1['日期'].tolist()
+        for i in range(length):
+            ans["开盘-收盘-最高-最低"].append({"日期": days[i],
+                                    "开盘": res1.loc[i, "开盘"],
+                                    "收盘": res1.loc[i, "收盘"],
+                                    "最高": res1.loc[i, "最高"],
+                                    "最低": res1.loc[i, "最低"]})
+        for i in range(length):
+            ans["振幅-涨跌幅-涨跌额-换手率"].append({"日期": days[i],
+                                        "振幅": res1.loc[i, "振幅"],
+                                        "涨跌幅": res1.loc[i, "涨跌幅"],
+                                        "涨跌额": res1.loc[i, "涨跌额"],
+                                        "换手率": res1.loc[i, "换手率"]})
+        
+    res_product = []
+    res_area = []
+    try:
+        df_origin = ak.stock_zygc_ym(symbol=q)
+    except:
+        flag2 = False
+    if flag2:
+        time_ls = df_origin['报告期'].unique()
+        time_ = None
+        for ele in time_ls:
+            if ele.endswith("年度"):
+                time_ = ele
+        df = df_origin.loc[df_origin['报告期'] == time_]
+        # 获取按产品分
+        df_product = df.loc[(df['分类方向'] == "按产品分") & (
+            df['分类'] != '合计')].loc[:, ['分类', '营业收入']]
+        danwei = getdanwei(df_product.iloc[0, -1])
+        colors = random.sample(clist, df_product.shape[0])
+        df_product['fill'] = colors
+        df_product.reset_index(drop=True, inplace=True)
+        df_product['营业收入'] = df_product['营业收入'].apply(lambda x: float(x[:-len(danwei)]))##!!注意数值类型的转换
+        res_product = change_df(df_product)
+        ## 获取按地区分
+        df_area = df.loc[(df['分类方向'] == "按地区分") & (
+            df['分类'] != '合计')].loc[:, ['分类', '营业收入']]
+        danwei_area = getdanwei(df_area.iloc[0, -1])
+        colors = random.sample(clist, df_area.shape[0])
+        df_area['fill'] = colors
+        df_area.reset_index(drop=True, inplace=True)
+        df_area['营业收入'] = df_area["营业收入"].apply(lambda x:float(x[:-len(danwei_area)]))
+        res_area = change_df(df_area)
 
-    time.sleep(1)
+    ## 信息查询
+    flag3 = True
+    try:
+        res = ak.stock_profile_cninfo(symbol=q)
+    except:
+        flag3 = False
+    
+    info = []
+    if flag3 and res.shape[0] != 0:
+        for ele in res.columns:
+            if res.loc[0, ele] == None:
+                continue
+            content = str(res.loc[0, ele])
+            if len(content) > 70:
+                content = content[:50] + '...'
+            info.append({"key":ele, "val":content})
+
     return {
         "stockcode": q,
         "chart1-1": ans["开盘-收盘-最高-最低"],
         "chart1-2": ans["振幅-涨跌幅-涨跌额-换手率"],
         "chart2-1": res_product,
-        "chart2-2": res_area
+        "chart2-2": res_area,
+        "info":info
     }
 
 

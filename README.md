@@ -11,6 +11,8 @@
 ![alt text](assets/image-2.png)
 
 ## 数据看板
-为避免后端请求数据库等的延时，在通信未结束时，按钮会不能再被点击。
+- 为避免后端请求数据库等的延时，在通信未结束时，按钮会不能再被点击。
+- 采用`q`和`tq`两个状态常量。tq用于读取输入，q用于后端查询。采用useEffect监听q的变化
 ![alt text](assets/image-3.png)
 ![alt text](assets/image-4.png)
+![alt text](assets/image-5.png)
